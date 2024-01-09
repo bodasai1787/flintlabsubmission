@@ -1,0 +1,1 @@
+*Enter command npm start to fire the backend to display front end on port : localhost 3000*
