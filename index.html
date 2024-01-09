@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ethereum Account Balance Checker</title>
+</head>
+<body>
+  <h1>Ethereum Account Balance Checker</h1>
+  
+  <div>
+    <label for="accountAddress">Enter Ethereum Account Address:</label>
+    <input type="text" id="accountAddress" placeholder="Enter Ethereum account address">
+    <button onclick="checkBalance()">Check Balance</button>
+  </div>
+
+  <div>
+    <h2>Account Information:</h2>
+    <p id="balance"></p>
+    <p id="change"></p>
+  </div>
+
+  <script>
+    async function checkBalance() {
+      const accountAddress = document.getElementById("accountAddress").value;
+      const balanceElement = document.getElementById("balance");
+      const changeElement = document.getElementById("change");
+
+      // Fetch balance for the provided Ethereum account
+      const currentBalance = await fetchEthereumBalance(accountAddress);
+      balanceElement.textContent = `Current Balance: ${currentBalance} ETH`;
+
+      // Fetch historical balance to calculate change
+      const twelveHoursAgo = Math.floor(Date.now() / 1000) - (12 * 60 * 60); // Unix timestamp 12 hours ago
+      const balanceTwelveHoursAgo = await fetchHistoricalBalance(accountAddress, twelveHoursAgo);
+
+      if (balanceTwelveHoursAgo !== null) {
+        const percentageChange = calculatePercentageChange(balanceTwelveHoursAgo, currentBalance);
+        changeElement.textContent = `Change in the last 12 hours: ${percentageChange.toFixed(2)}%`;
+
+        if (percentageChange <= -10) {
+          // Trigger an alert if the balance decreased by 10% or more
+          alert("Balance has decreased by 10% or more in the last 12 hours!");
+        }
+      } else {
+        changeElement.textContent = `Unable to retrieve historical balance`;
+      }
+    }
+
+    async function fetchEthereumBalance(address) {
+      // Simulated function to fetch current balance using a blockchain API or library
+      // Replace this with the actual code to fetch Ethereum balance
+      // Example: return someBlockchainService.getBalance(address);
+      return Math.random() * 100; // Simulated balance for demonstration
+    }
+
+    async function fetchHistoricalBalance(address, timestamp) {
+      // Simulated function to fetch historical balance using a blockchain API or library
+      // Replace this with the actual code to fetch historical balance
+      // Example: return someBlockchainService.getHistoricalBalance(address, timestamp);
+      return Math.random() * 100; // Simulated historical balance for demonstration
+    }
+
+    function calculatePercentageChange(oldValue, newValue) {
+      return ((newValue - oldValue) / oldValue) * 100;
+    }
+  </script>
+</body>
+</html>
